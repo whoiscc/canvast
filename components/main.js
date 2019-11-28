@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, StatusBar, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Canvas from './canvas';
 import APIWorker from '../lib/api_worker';
 import CanvasManager from '../lib/canvas';
 import CanvasTouch from '../lib/canvas_touch';
-import Button from './button';
+import ButtonContainer from './button_container';
+import ColorPicker from './color_picker';
+import PosSetter from './pos_setter';
 
 export default class Main extends Component {
     constructor(props) {
@@ -15,46 +17,52 @@ export default class Main extends Component {
     }
 
     state = {
-        color: [9, 100, 64, 0.5],
+        color: [240, 150, 190, 1.0],
+        currentColor: [240, 150, 190, 1.0],
         pos: [0, 0],
         buttonVisible: true,
+        colorPickerVisible: false,
+        posSetterVisible: false,
     }
 
     render() {
-        const [h, s, l, a] = this.state.color;
-        const color = `hsla(${h}, ${s}%, ${l}%, ${a})`;
-
-        const buttonView = this.state.buttonVisible ? (
-            <View style={styles.buttonContainer}>
-                <Button
-                    size={60}
-                    onPress={() => this.props.logger.debugLog('pressed')}
-                    style={{ backgroundColor: color }}
-                ></Button>
-                <Button
-                    size={60}
-                    onPress={() => { }}
-                    style={{ justifyContent: 'center' }}
-                >
-                    <Text
-                        adjustsFontSizeToFit={true}
-                        style={{ textAlign: 'center' }}
-                    >{Math.floor(this.state.pos[0])}</Text>
-                    <Text
-                        adjustsFontSizeToFit={true}
-                        style={{ textAlign: 'center' }}
-                    >{Math.floor(this.state.pos[1])}</Text>
-                </Button>
-            </View>
-        ) : null;
-
         return (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
+                <ColorPicker
+                    visible={this.state.colorPickerVisible}
+                    onCloseHandler={() => {
+                        this.setState(state => ({
+                            colorPickerVisible: false,
+                            color: state.currentColor,
+                        }));
+                        this.canvas.setColor(this.state.currentColor);
+                    }}
+                    color={this.state.color}
+                    updateColor={(color) => this.setState({ currentColor: color })}
+                />
+                <PosSetter
+                    visible={this.state.posSetterVisible}
+                    setPos={(pos) => {
+                        this.setState({
+                            pos,
+                            posSetterVisible: false,
+                        });
+                        this.canvas.setPos(pos);
+                    }}
+                    cancel={() => {
+                        this.setState({ posSetterVisible: false });
+                    }}
+                />
                 <Canvas
                     logger={this.props.logger} touch={this.canvasTouch}
                     nativeCanvasHandler={this.nativeCanvasHandler}
                 />
-                {buttonView}
+                <ButtonContainer
+                    pickColorHandler={() => this.setState({ colorPickerVisible: true })}
+                    setPosHandler={() => this.setState({ posSetterVisible: true })}
+                    color={this.state.currentColor}
+                    pos={this.state.pos}
+                />
             </View>
         );
     }
@@ -73,15 +81,7 @@ export default class Main extends Component {
     }
 
     nativeCanvasHandler = (canvas) => {
-        this.canvas = new CanvasManager(this.apiWorker, this, canvas, [0, 0], this.props.logger);
+        this.canvas = new CanvasManager(this.apiWorker, this, canvas, this.state.pos, this.props.logger);
         this.canvasTouch.setCanvas(this.canvas);
     }
 }
-
-const styles = StyleSheet.create({
-    buttonContainer: {
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-    },
-});
