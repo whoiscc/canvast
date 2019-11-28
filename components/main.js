@@ -31,6 +31,11 @@ export default class Main extends Component {
         );
     }
 
+    componentDidMount() {
+        //
+        this.apiWorker.test();
+    }
+
     debugLoggerMountHandler = debugLoggerHandlers => {
         this.debugLoggerHandlers = debugLoggerHandlers;
     }
