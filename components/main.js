@@ -4,6 +4,7 @@ import DebugLogger from './debug_logger';
 import Canvas from './canvas';
 import APIWorker from '../lib/api_worker';
 import CanvasManager from '../lib/canvas';
+import CanvasTouch from '../lib/canvas_touch';
 
 export default class Main extends Component {
     constructor(props) {
@@ -11,6 +12,7 @@ export default class Main extends Component {
         this.debugLoggerHandlers = null;
         this.apiWorker = new APIWorker(this);
         this.canvas = null;
+        this.canvasTouch = new CanvasTouch(this);
     }
 
     render() {
@@ -22,11 +24,11 @@ export default class Main extends Component {
                     unmountHandler={this.debugLoggerUnmountHandler}
                 />
                 <Canvas 
-                    logger={this} 
+                    logger={this} touch={this.canvasTouch}
                     nativeCanvasHandler={this.nativeCanvasHandler}
                 />
             </View>
-        )
+        );
     }
 
     debugLoggerMountHandler = debugLoggerHandlers => {
@@ -39,6 +41,7 @@ export default class Main extends Component {
 
     nativeCanvasHandler = (canvas) => {
         this.canvas = new CanvasManager(this.apiWorker, canvas, [0, 0], this);
+        this.canvasTouch.setCanvas(this.canvas);
     }
 
     updateLog(text) {
@@ -64,4 +67,4 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-})
+});

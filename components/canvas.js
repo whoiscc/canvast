@@ -10,7 +10,9 @@ export default class Canvas extends Component {
 
     render() {
         return (
-            <View style={styles.container} onLayout={this.layoutHandler}>
+            <View
+                {...this.props.touch.panHandlers()}
+                style={styles.container} onLayout={this.layoutHandler}>
                 <RNCanvas ref={this.nativeCanvasHandler} />
             </View>
         );
