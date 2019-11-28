@@ -13,7 +13,7 @@ export default class DebugLogger extends Component {
                 logList[0] = log;
             } else {
                 logList.unshift(log);
-                if (logList.length > 5) {
+                if (logList.length > 30) {
                     logList.pop();
                 }
             }
