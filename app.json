@@ -26,6 +26,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "An unlimited, blank canvas for everyone."
+    "description": "An unlimited, blank canvas for everyone.",
+    "githubUrl": "https://github.com/whoiscc/canvast"
   }
 }
