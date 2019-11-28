@@ -3,12 +3,14 @@ import { View, StyleSheet, StatusBar } from 'react-native';
 import DebugLogger from './debug_logger';
 import Canvas from './canvas';
 import APIWorker from '../lib/api_worker';
+import CanvasManager from '../lib/canvas';
 
 export default class Main extends Component {
     constructor(props) {
         super(props);
         this.debugLoggerHandlers = null;
-        this.api_worker = new APIWorker(this);
+        this.apiWorker = new APIWorker(this);
+        this.canvas = null;
     }
 
     render() {
@@ -19,7 +21,10 @@ export default class Main extends Component {
                     mountHandler={this.debugLoggerMountHandler}
                     unmountHandler={this.debugLoggerUnmountHandler}
                 />
-                <Canvas logger={this} />
+                <Canvas 
+                    logger={this} 
+                    nativeCanvasHandler={this.nativeCanvasHandler}
+                />
             </View>
         )
     }
@@ -30,6 +35,10 @@ export default class Main extends Component {
 
     debugLoggerUnmountHandler = () => {
         this.debugLoggerHandlers = null;
+    }
+
+    nativeCanvasHandler = (canvas) => {
+        this.canvas = new CanvasManager(this.apiWorker, canvas, [0, 0], this);
     }
 
     updateLog(text) {
