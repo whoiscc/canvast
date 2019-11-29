@@ -1,6 +1,7 @@
 import React from 'react';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import { TriangleColorPicker, fromHsv } from 'react-native-color-picker';
+import rgbToString from '../lib/rgb_to_string';
 
 export default function (props) {
     return (
@@ -29,8 +30,4 @@ function hexToRgb(hex) {
         parseInt(result[3], 16),
         1
     ] : null;
-}
-
-export function rgbToString(rgb) {
-    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rgb[3]})`;
 }

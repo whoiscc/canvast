@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Button from './button';
-import { rgbToString } from './color_picker';
+import rgbToString from '../lib/rgb_to_string';
 
 export default function ButtonContainer(props) {
-    return (
+    return props.visible ? (
         <View style={{
             position: 'absolute',
             right: 0,
@@ -30,5 +30,5 @@ export default function ButtonContainer(props) {
                 >{Math.floor(props.pos[1])}</Text>
             </Button>
         </View>
-    );
+    ) : null;
 }

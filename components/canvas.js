@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import RNCanvas from 'react-native-canvas';
 
 export default class Canvas extends Component {
@@ -13,7 +13,19 @@ export default class Canvas extends Component {
             <View
                 {...this.props.touch.panHandlers()}
                 style={styles.container} onLayout={this.layoutHandler}>
-                <RNCanvas ref={this.nativeCanvasHandler} />
+                <View style={{
+                    position: 'absolute',
+                    left: this.props.offset[0],
+                    top: this.props.offset[1],
+                }}>
+                    <RNCanvas ref={this.nativeCanvasHandler} />
+                    {/* {this.props.imageSrc ? <Image
+                        style={[StyleSheet.absoluteFill, { borderWidth: 3 }]}
+                        source={{ uri: this.props.imageSrc }}
+                        // width={300} height={300}
+                        resizeMode="stretch"
+                    /> : null} */}
+                </View>
             </View>
         );
     }

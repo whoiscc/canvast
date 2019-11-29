@@ -13,10 +13,10 @@ export default class App extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar hidden />
-                <DebugLogger
+                {/* <DebugLogger
                     mountHandler={this.debugLoggerMountHandler}
                     unmountHandler={this.debugLoggerUnmountHandler}
-                />
+                /> */}
                 <MainView logger={this} />
             </View>
         );

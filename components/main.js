@@ -9,6 +9,8 @@ import ColorPicker from './color_picker';
 import PosSetter from './pos_setter';
 
 export default class Main extends Component {
+    INIT_COLOR = [240, 150, 190, 1.0];
+
     constructor(props) {
         super(props);
         this.apiWorker = new APIWorker(this.props.logger);
@@ -17,12 +19,14 @@ export default class Main extends Component {
     }
 
     state = {
-        color: [240, 150, 190, 1.0],
-        currentColor: [240, 150, 190, 1.0],
+        color: this.INIT_COLOR,
+        currentColor: this.INIT_COLOR,
         pos: [0, 0],
         buttonVisible: true,
         colorPickerVisible: false,
         posSetterVisible: false,
+        offset: [0, 0],
+        imageSrc: null,
     }
 
     render() {
@@ -56,8 +60,11 @@ export default class Main extends Component {
                 <Canvas
                     logger={this.props.logger} touch={this.canvasTouch}
                     nativeCanvasHandler={this.nativeCanvasHandler}
+                    offset={this.state.offset}
+                    imageSrc={this.state.imageSrc}
                 />
                 <ButtonContainer
+                    visible={this.state.buttonVisible}
                     pickColorHandler={() => this.setState({ colorPickerVisible: true })}
                     setPosHandler={() => this.setState({ posSetterVisible: true })}
                     color={this.state.currentColor}
@@ -81,7 +88,26 @@ export default class Main extends Component {
     }
 
     nativeCanvasHandler = (canvas) => {
-        this.canvas = new CanvasManager(this.apiWorker, this, canvas, this.state.pos, this.props.logger);
+        this.canvas = new CanvasManager(this.apiWorker, this, canvas, this.state.pos, this.INIT_COLOR, this.props.logger);
         this.canvasTouch.setCanvas(this.canvas);
+    }
+
+    updatePos([x, y]) {
+        this.setState({ pos: [x, y] });
+    }
+
+    moveCanvas([dx, dy]) {
+        this.setState(({ offset: [x, y] }) => ({
+            offset: [x + dx, y + dy],
+        }));
+    }
+
+    resetCanvas() {
+        this.setState({ offset: [0, 0] });
+    }
+
+    updateImage(imageSrc) {
+        // this.props.logger.debugLog(imageSrc);
+        this.setState({ imageSrc });
     }
 }
